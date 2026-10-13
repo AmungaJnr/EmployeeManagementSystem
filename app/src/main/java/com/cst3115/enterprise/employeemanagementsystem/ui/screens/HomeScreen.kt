@@ -27,6 +27,7 @@ import com.cst3115.enterprise.employeemanagementsystem.viewmodel.EmployeeViewMod
 fun HomeScreen(
     viewModel: EmployeeViewModel,
     onAddDepartment: () -> Unit,
+    onAddEmployee: () -> Unit,
     modifier: Modifier = Modifier ) {
 
     val employees by viewModel.employees.collectAsStateWithLifecycle()
@@ -90,6 +91,15 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth()
         ){
             Text("Add Department")
+        }
+
+        Spacer(modifier = Modifier.height(9.dp))
+
+        Button(
+            onClick = onAddEmployee,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Add Employee")
         }
 
         Spacer(modifier = Modifier.height(32.dp))
