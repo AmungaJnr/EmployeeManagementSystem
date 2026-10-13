@@ -25,27 +25,49 @@ import com.cst3115.enterprise.employeemanagementsystem.ui.theme.EmployeeManageme
 import com.cst3115.enterprise.employeemanagementsystem.ui.theme.components.StatCard
 import androidx.compose.foundation.lazy.items
 import com.cst3115.enterprise.employeemanagementsystem.ui.theme.components.EmployeeCard
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.cst3115.enterprise.employeemanagementsystem.data.local.AppDatabase
+import com.cst3115.enterprise.employeemanagementsystem.data.repository.EmployeeRepository
+import com.cst3115.enterprise.employeemanagementsystem.viewmodel.EmployeeViewModel
+import com.cst3115.enterprise.employeemanagementsystem.viewmodel.EmployeeViewModelFactory
+import androidx.compose.runtime.getValue
 
 
-// Test data before Room
+/* Test data before Room
 data class EmployeePreview(
     val id: Int,
     val name: String,
     val email: String,
     val deptId: Int
 )
+*/
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val database = AppDatabase.getDatabase(applicationContext)
+
+            val repository = EmployeeRepository(
+                employeeDao = database.employeeDao(),
+                departmentDao = database.departmentDao()
+            )
+
+            val employeeViewModel: EmployeeViewModel = viewModel(
+                factory = EmployeeViewModelFactory(repository)
+            )
+
             EmployeeManagementSystemTheme {
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     containerColor = MaterialTheme.colorScheme.background
                 ) { innerPadding ->
 
                     HomeScreen(
+                        viewModel = employeeViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -55,13 +77,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    // Test data before Room
-    val employees = listOf(
-        EmployeePreview(1, "John Doe", "john@company.com", 1),
-        EmployeePreview(2, "Sarah Miller", "sarah@company.com", 2),
-        EmployeePreview(3, "Michael Brown", "michael@company.com", 1)
-    )
+fun HomeScreen(
+    viewModel: EmployeeViewModel,
+    modifier: Modifier = Modifier ) {
+
+    val employees by viewModel.employees.collectAsStateWithLifecycle()
+
+    val departments by viewModel.departments.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -100,14 +122,14 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         ){
             StatCard(
                 title = "EMPLOYEES",
-                value = "24",
+                value = employees.size.toString(),
                 description = "Total workforce",
                 modifier = Modifier.weight(1f)
             )
 
             StatCard(
                 title = "DEPARTMENTS",
-                value = "05",
+                value = departments.size.toString(),
                 description = "Business units",
                 modifier = Modifier.weight(1f)
            )
@@ -135,13 +157,14 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 EmployeeCard(
                     name = employee.name,
                     email = employee.email,
-                    deptID = employee.deptId
+                    deptID = employee.deptID
                 )
             }
         }
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
@@ -166,9 +189,13 @@ fun HomeScreenLightPreview(){
     name = "Dark Theme",
     showBackground = true
 )
+
 @Composable
 fun HomeScreenDarkPreview(){
     EmployeeManagementSystemTheme(darkTheme = true) {
         HomeScreen()
     }
+
 }
+
+ */
