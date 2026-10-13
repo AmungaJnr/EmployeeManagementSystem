@@ -31,6 +31,7 @@ fun HomeScreen(
     onAddEmployee: () -> Unit,
     onEmployeeClick: (Int) -> Unit,
     onDeleteEmployee: () -> Unit,
+    onDeleteDepartment: () -> Unit,
     modifier: Modifier = Modifier ) {
 
     val employees by viewModel.employees.collectAsStateWithLifecycle()
@@ -112,6 +113,15 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Delete Employee")
+        }
+
+        Spacer(modifier = Modifier.height(9.dp))
+
+        OutlinedButton(
+            onClick = onDeleteDepartment,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Delete Department")
         }
 
         Spacer(modifier = Modifier.height(32.dp))
