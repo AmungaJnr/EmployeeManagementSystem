@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cst3115.enterprise.employeemanagementsystem.ui.components.EmployeeCard
 import com.cst3115.enterprise.employeemanagementsystem.ui.components.StatCard
 import com.cst3115.enterprise.employeemanagementsystem.viewmodel.EmployeeViewModel
+import androidx.compose.material3.OutlinedButton
 
 @Composable
 fun HomeScreen(
@@ -29,6 +30,7 @@ fun HomeScreen(
     onAddDepartment: () -> Unit,
     onAddEmployee: () -> Unit,
     onEmployeeClick: (Int) -> Unit,
+    onDeleteEmployee: () -> Unit,
     modifier: Modifier = Modifier ) {
 
     val employees by viewModel.employees.collectAsStateWithLifecycle()
@@ -101,6 +103,15 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Add Employee")
+        }
+
+        Spacer(modifier = Modifier.height(9.dp))
+
+        OutlinedButton(
+            onClick = onDeleteEmployee,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Delete Employee")
         }
 
         Spacer(modifier = Modifier.height(32.dp))

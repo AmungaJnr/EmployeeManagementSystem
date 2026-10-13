@@ -16,6 +16,7 @@ import com.cst3115.enterprise.employeemanagementsystem.ui.screens.AddDepartmentS
 import com.cst3115.enterprise.employeemanagementsystem.viewmodel.EmployeeViewModel
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.AddEmployeeScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.EmployeeDetailsScreen
+import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DeleteEmployeeScreen
 
 @Composable
 fun AppNavigation(
@@ -24,7 +25,10 @@ fun AppNavigation(
 ) {
 
     val navController = rememberNavController()
+
     val departments by viewModel.departments.collectAsStateWithLifecycle()
+
+    val employees by viewModel.employees.collectAsStateWithLifecycle()
 
     NavHost(
         navController = navController,
@@ -32,6 +36,7 @@ fun AppNavigation(
         modifier = modifier
     ) {
 
+        // Home Screen
         composable(AppRoutes.HOME) {
 
             HomeScreen(
@@ -49,10 +54,15 @@ fun AppNavigation(
                     navController.navigate(
                         "employee_details/$employeeId"
                     )
+                },
+
+                onDeleteEmployee = {
+                    navController.navigate(AppRoutes.DELETE_EMPLOYEE)
                 }
             )
         }
 
+        // Add department
         composable(AppRoutes.ADD_DEPARTMENT) {
 
             AddDepartmentScreen(
@@ -69,6 +79,7 @@ fun AppNavigation(
             )
         }
 
+        // Add employee
         composable(AppRoutes.ADD_EMPLOYEE){
 
             AddEmployeeScreen(
@@ -91,6 +102,7 @@ fun AppNavigation(
             )
         }
 
+        // Employee Details
         composable(AppRoutes.EMPLOYEE_DETAILS) { backStackEntry ->
 
             val employeeId = backStackEntry.arguments
@@ -123,6 +135,22 @@ fun AppNavigation(
                     }
                 )
             }
+        }
+
+        // Delete employee
+        composable(AppRoutes.DELETE_EMPLOYEE) {
+
+            DeleteEmployeeScreen(
+                employees = employees,
+
+                onDeleteEmployee = { employee ->
+                    viewModel.deleteEmployee(employee)
+                },
+
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
