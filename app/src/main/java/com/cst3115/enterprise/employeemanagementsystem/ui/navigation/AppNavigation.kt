@@ -17,6 +17,7 @@ import com.cst3115.enterprise.employeemanagementsystem.viewmodel.EmployeeViewMod
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.AddEmployeeScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.EmployeeDetailsScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DeleteEmployeeScreen
+import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DeleteDepartmentScreen
 
 @Composable
 fun AppNavigation(
@@ -58,6 +59,10 @@ fun AppNavigation(
 
                 onDeleteEmployee = {
                     navController.navigate(AppRoutes.DELETE_EMPLOYEE)
+                },
+
+                onDeleteDepartment = {
+                    navController.navigate(AppRoutes.DELETE_DEPARTMENT)
                 }
             )
         }
@@ -137,7 +142,7 @@ fun AppNavigation(
             }
         }
 
-        // Delete employee
+        // Deleting an employee(s)
         composable(AppRoutes.DELETE_EMPLOYEE) {
 
             DeleteEmployeeScreen(
@@ -145,6 +150,23 @@ fun AppNavigation(
 
                 onDeleteEmployee = { employee ->
                     viewModel.deleteEmployee(employee)
+                },
+
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Deleting a department(s)
+        composable(AppRoutes.DELETE_DEPARTMENT) {
+
+            DeleteDepartmentScreen(
+                departments = departments,
+                employees = employees,
+
+                onDeleteDepartment = { department ->
+                    viewModel.deleteDepartment(department)
                 },
 
                 onBack = {
