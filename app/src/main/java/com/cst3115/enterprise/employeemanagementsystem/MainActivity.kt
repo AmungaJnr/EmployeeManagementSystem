@@ -77,6 +77,25 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ){
+            StatCard(
+                title = "EMPLOYEES",
+                value = "24",
+                description = "Total workforce",
+                modifier = Modifier.weight(1f)
+            )
+
+            StatCard(
+                title = "DEPARTMENTS",
+                value = "05",
+                description = "Business units",
+                modifier = Modifier.weight(1f)
+           )
+        }
     }
 }
 
