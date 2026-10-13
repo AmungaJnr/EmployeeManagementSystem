@@ -1,4 +1,4 @@
-package com.cst3115.enterprise.employeemanagementsystem.ui.theme.components
+package com.cst3115.enterprise.employeemanagementsystem.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
