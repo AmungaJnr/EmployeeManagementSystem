@@ -5,10 +5,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.HomeScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.AddDepartmentScreen
 import com.cst3115.enterprise.employeemanagementsystem.viewmodel.EmployeeViewModel
+import com.cst3115.enterprise.employeemanagementsystem.ui.screens.AddEmployeeScreen
 
 @Composable
 fun AppNavigation(
@@ -17,6 +20,7 @@ fun AppNavigation(
 ) {
 
     val navController = rememberNavController()
+    val departments by viewModel.departments.collectAsStateWithLifecycle()
 
     NavHost(
         navController = navController,
@@ -30,6 +34,9 @@ fun AppNavigation(
                 viewModel = viewModel,
                 onAddDepartment = {
                     navController.navigate(AppRoutes.ADD_DEPARTMENT)
+                },
+                onAddEmployee = {
+                    navController.navigate(AppRoutes.ADD_EMPLOYEE)
                 }
             )
         }
@@ -40,6 +47,28 @@ fun AppNavigation(
                 onSaveDepartment = { name ->
 
                     viewModel.addDepartment(name)
+
+                    navController.popBackStack()
+                },
+
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(AppRoutes.ADD_EMPLOYEE){
+
+            AddEmployeeScreen(
+                departments = departments,
+
+                onSaveEmployee = { name, email, deptID ->
+
+                    viewModel.addEmployee(
+                        name = name,
+                        email = email,
+                        deptID = deptID
+                    )
 
                     navController.popBackStack()
                 },
