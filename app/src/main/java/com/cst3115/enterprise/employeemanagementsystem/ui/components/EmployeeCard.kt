@@ -25,9 +25,11 @@ fun EmployeeCard(
     name: String,
     deptID: Int,
     email: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Card(
+        onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(

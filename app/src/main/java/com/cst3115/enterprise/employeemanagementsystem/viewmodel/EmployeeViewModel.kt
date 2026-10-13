@@ -76,4 +76,8 @@ class EmployeeViewModel (
                 repository.deleteDepartment(department)
             }
         }
+
+        fun getEmployeeDetails(employeeId: Int) =
+        repository.getEmployeeDetails(employeeId)
+
 }

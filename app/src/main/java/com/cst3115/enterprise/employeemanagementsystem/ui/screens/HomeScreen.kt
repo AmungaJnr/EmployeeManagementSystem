@@ -28,6 +28,7 @@ fun HomeScreen(
     viewModel: EmployeeViewModel,
     onAddDepartment: () -> Unit,
     onAddEmployee: () -> Unit,
+    onEmployeeClick: (Int) -> Unit,
     modifier: Modifier = Modifier ) {
 
     val employees by viewModel.employees.collectAsStateWithLifecycle()
@@ -124,7 +125,10 @@ fun HomeScreen(
                 EmployeeCard(
                     name = employee.name,
                     email = employee.email,
-                    deptID = employee.deptID
+                    deptID = employee.deptID,
+                    onClick = {
+                        onEmployeeClick(employee.id)
+                    }
                 )
             }
         }
