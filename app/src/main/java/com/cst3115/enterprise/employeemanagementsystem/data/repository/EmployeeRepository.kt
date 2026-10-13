@@ -40,4 +40,8 @@ class EmployeeRepository(
     // Observe a specific employee
     fun getEmployeeById(employeeId: Int) =
         employeeDao.getEmployeeById(employeeId)
+
+    // Gets the Employees Details (includes their department)
+    fun getEmployeeDetails(employeeId: Int) =
+        employeeDao.getEmployeeDetails(employeeId)
 }

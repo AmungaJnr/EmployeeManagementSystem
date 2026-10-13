@@ -19,4 +19,23 @@ interface EmployeeDAO {
 
     @Query("SELECT * FROM employees WHERE id = :employeeId")
     fun getEmployeeById(employeeId: Int): Flow<Employee?>
+
+    @Query(
+        """
+    SELECT
+        employees.id,
+        employees.name,
+        employees.email,
+        employees.deptID,
+        departments.name AS departmentName
+        
+    FROM employees
+    
+    INNER JOIN departments
+        ON employees.deptID = departments.id
+        
+    WHERE employees.id = :employeeId
+    """
+    )
+    fun getEmployeeDetails(employeeId: Int): Flow<EmployeeDetails?>
 }
