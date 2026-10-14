@@ -4,6 +4,8 @@ AppRoutes is a singleton object. It needs no instantiate.
  */
 object AppRoutes {
 
+    const val SPLASH = "splash"
+
     const val HOME = "home"
 
     const val ADD_EMPLOYEE = "add_employee"
