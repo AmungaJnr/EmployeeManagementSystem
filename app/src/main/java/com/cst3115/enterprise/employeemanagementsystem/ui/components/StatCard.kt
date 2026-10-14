@@ -1,6 +1,7 @@
 package com.cst3115.enterprise.employeemanagementsystem.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -23,10 +24,16 @@ fun StatCard(
     title: String,
     value: String,
     description: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ){
     Card(
-        modifier = modifier,
+        modifier = if (onClick != null){
+                modifier.clickable(onClick = onClick)
+        } else{
+            modifier
+        },
+
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

@@ -40,6 +40,7 @@ fun HomeScreen(
     onEmployeeClick: (Int) -> Unit,
     onDeleteEmployee: () -> Unit,
     onDeleteDepartment: () -> Unit,
+    onViewDepartments: () -> Unit,
     modifier: Modifier = Modifier ) {
 
     val employees by viewModel.employees.collectAsStateWithLifecycle()
@@ -126,8 +127,9 @@ fun HomeScreen(
                     StatCard(
                         title = "Departments",
                         value = departments.size.toString(),
-                        description = "Departments",
-                        modifier = Modifier.weight(1f)
+                        description = "Tap to explore",
+                        modifier = Modifier.weight(1f),
+                        onClick = onViewDepartments
                     )
                 }
             }
