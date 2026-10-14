@@ -29,6 +29,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
@@ -41,6 +43,7 @@ fun HomeScreen(
     onDeleteEmployee: () -> Unit,
     onDeleteDepartment: () -> Unit,
     onViewDepartments: () -> Unit,
+    onLogout: () -> Unit,
     modifier: Modifier = Modifier ) {
 
     val employees by viewModel.employees.collectAsStateWithLifecycle()
@@ -62,32 +65,48 @@ fun HomeScreen(
 
         // 1. BRAND HEADER
         item {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
 
-                Row {
-                    Text(
-                        text = "WORKFORCE",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                    Row {
+                        Text(
+                            text = "WORKFORCE",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+
+                        Text(
+                            text = "™",
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
 
                     Text(
-                        text = "™",
-                        fontSize = 11.sp,
+                        text = "THE THREE",
+                        style = MaterialTheme.typography.labelMedium,
+                        letterSpacing = 4.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
 
-                Text(
-                    text = "THE THREE",
-                    style = MaterialTheme.typography.labelMedium,
-                    letterSpacing = 4.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                TextButton(
+                    onClick = onLogout
+                ){
+                    Text(
+                        text = "Logout",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
+
         }
 
         // 2. DASHBOARD OVERVIEW

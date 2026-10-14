@@ -10,6 +10,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import com.cst3115.enterprise.employeemanagementsystem.auth.AuthManager
+import com.cst3115.enterprise.employeemanagementsystem.auth.SessionManager
 
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.HomeScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.AddDepartmentScreen
@@ -20,6 +23,8 @@ import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DeleteEmployee
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DeleteDepartmentScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.SplashScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DepartmentDirectoryScreen
+import com.cst3115.enterprise.employeemanagementsystem.ui.screens.LoginScreen
+import com.cst3115.enterprise.employeemanagementsystem.auth.AuthGuard
 
 @Composable
 fun AppNavigation(
@@ -33,6 +38,25 @@ fun AppNavigation(
 
     val employees by viewModel.employees.collectAsStateWithLifecycle()
 
+    val context = LocalContext.current
+
+    val authManager = remember{
+        AuthManager()
+    }
+
+    val sessionManager = remember(context) {
+        SessionManager(context)
+    }
+
+    val onUnauthorized = {
+        navController.navigate(AppRoutes.LOGIN) {
+            popUpTo(navController.graph.id) {
+                inclusive = true
+            }
+            launchSingleTop = true
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = AppRoutes.SPLASH,
@@ -45,7 +69,13 @@ fun AppNavigation(
             SplashScreen(
                 onSplashFinished = {
 
-                    navController.navigate(AppRoutes.HOME) {
+                    val destination = if(sessionManager.isLoggedIn()){
+                        AppRoutes.HOME
+                    } else {
+                        AppRoutes.LOGIN
+                    }
+
+                    navController.navigate(destination) {
 
                         popUpTo(AppRoutes.SPLASH) {
                             inclusive = true
@@ -57,78 +87,139 @@ fun AppNavigation(
             )
         }
 
+        // Login Screen
+        composable(AppRoutes.LOGIN) {
+
+            LoginScreen(
+                onLogin = { username, password ->
+
+                    val authenticated = authManager.validateCredentials(
+                        username,
+                        password
+                    )
+
+                    if (authenticated) {
+
+                        sessionManager.saveSession()
+
+                        navController.navigate(AppRoutes.HOME) {
+                            popUpTo(AppRoutes.LOGIN) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    }
+
+                    authenticated
+                }
+            )
+        }
+
         // Home Screen
         composable(AppRoutes.HOME) {
 
-            HomeScreen(
-                viewModel = viewModel,
+            AuthGuard(
+                sessionManager = sessionManager,
+                onUnauthorized = onUnauthorized
+            ) {
 
-                onAddDepartment = {
-                    navController.navigate(AppRoutes.ADD_DEPARTMENT)
-                },
+                HomeScreen(
+                    viewModel = viewModel,
 
-                onAddEmployee = {
-                    navController.navigate(AppRoutes.ADD_EMPLOYEE)
-                },
+                    onAddDepartment = {
+                        navController.navigate(AppRoutes.ADD_DEPARTMENT)
+                    },
 
-                onEmployeeClick = { employeeId ->
-                    navController.navigate(
-                        "employee_details/$employeeId"
-                    )
-                },
+                    onAddEmployee = {
+                        navController.navigate(AppRoutes.ADD_EMPLOYEE)
+                    },
 
-                onDeleteEmployee = {
-                    navController.navigate(AppRoutes.DELETE_EMPLOYEE)
-                },
+                    onEmployeeClick = { employeeId ->
+                        navController.navigate(
+                            "employee_details/$employeeId"
+                        )
+                    },
 
-                onDeleteDepartment = {
-                    navController.navigate(AppRoutes.DELETE_DEPARTMENT)
-                },
+                    onDeleteEmployee = {
+                        navController.navigate(AppRoutes.DELETE_EMPLOYEE)
+                    },
 
-                onViewDepartments = {
-                    navController.navigate(AppRoutes.DEPARTMENT_DIRECTORY)
-                }
-            )
+                    onDeleteDepartment = {
+                        navController.navigate(AppRoutes.DELETE_DEPARTMENT)
+                    },
+
+                    onViewDepartments = {
+                        navController.navigate(AppRoutes.DEPARTMENT_DIRECTORY)
+                    },
+
+                    onLogout = {
+                        sessionManager.logout()
+
+                        navController.navigate(AppRoutes.LOGIN) {
+                            popUpTo(AppRoutes.HOME) {
+                                inclusive = true
+                            }
+
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+
+
         }
 
         // Add department
         composable(AppRoutes.ADD_DEPARTMENT) {
 
-            AddDepartmentScreen(
-                onSaveDepartment = { name ->
+            AuthGuard(
+                sessionManager = sessionManager,
+                onUnauthorized = onUnauthorized
+            ){
 
-                    viewModel.addDepartment(name)
+                AddDepartmentScreen(
+                    onSaveDepartment = { name ->
 
-                    navController.popBackStack()
-                },
+                        viewModel.addDepartment(name)
 
-                onBack = {
-                    navController.popBackStack()
-                }
-            )
+                        navController.popBackStack()
+                    },
+
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
         }
 
         // Add employee
         composable(AppRoutes.ADD_EMPLOYEE){
 
-            AddEmployeeScreen(
-                departments = departments,
+            AuthGuard(
+                sessionManager = sessionManager,
+                onUnauthorized = onUnauthorized
+            ){
+                AddEmployeeScreen(
+                    departments = departments,
 
-                onSaveEmployee = { name, email, deptID ->
+                    onSaveEmployee = { name, email, deptID ->
 
-                    viewModel.addEmployee(
-                        name = name,
-                        email = email,
-                        deptID = deptID
-                    )
+                        viewModel.addEmployee(
+                            name = name,
+                            email = email,
+                            deptID = deptID
+                        )
 
-                    navController.popBackStack()
-                },
+                        navController.popBackStack()
+                    },
 
-                onBack = {
-                    navController.popBackStack()
-                }
-            )
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
         }
 
         // Employee Details
@@ -138,27 +229,79 @@ fun AppNavigation(
                 ?.getString("employeeId")
                 ?.toIntOrNull()
 
-            if (employeeId == null) {
+            AuthGuard(
+                sessionManager = sessionManager,
+                onUnauthorized = onUnauthorized
+            ){
 
-                EmployeeDetailsScreen(
-                    employee = null,
+                if (employeeId == null) {
+
+                    EmployeeDetailsScreen(
+                        employee = null,
+                        onBack = {
+                            navController.popBackStack()
+                        }
+                    )
+
+                } else {
+
+                    val employeeFlow = androidx.compose.runtime.remember(employeeId) {
+                        viewModel.getEmployeeDetails(employeeId)
+                    }
+
+                    val employee by employeeFlow.collectAsStateWithLifecycle(
+                        initialValue = null
+                    )
+
+                    EmployeeDetailsScreen(
+                        employee = employee,
+                        onBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
+
+        }
+
+        // Deleting an employee(s)
+        composable(AppRoutes.DELETE_EMPLOYEE) {
+
+            AuthGuard(
+                sessionManager = sessionManager,
+                onUnauthorized = onUnauthorized
+            ){
+                DeleteEmployeeScreen(
+                    employees = employees,
+
+                    onDeleteEmployee = { employee ->
+                        viewModel.deleteEmployee(employee)
+                    },
+
                     onBack = {
                         navController.popBackStack()
                     }
                 )
 
-            } else {
+            }
 
-                val employeeFlow = androidx.compose.runtime.remember(employeeId) {
-                    viewModel.getEmployeeDetails(employeeId)
-                }
+        }
 
-                val employee by employeeFlow.collectAsStateWithLifecycle(
-                    initialValue = null
-                )
+        // Deleting a department(s)
+        composable(AppRoutes.DELETE_DEPARTMENT) {
 
-                EmployeeDetailsScreen(
-                    employee = employee,
+            AuthGuard(
+                sessionManager = sessionManager,
+                onUnauthorized = onUnauthorized
+            ){
+                DeleteDepartmentScreen(
+                    departments = departments,
+                    employees = employees,
+
+                    onDeleteDepartment = { department ->
+                        viewModel.deleteDepartment(department)
+                    },
+
                     onBack = {
                         navController.popBackStack()
                     }
@@ -166,49 +309,22 @@ fun AppNavigation(
             }
         }
 
-        // Deleting an employee(s)
-        composable(AppRoutes.DELETE_EMPLOYEE) {
-
-            DeleteEmployeeScreen(
-                employees = employees,
-
-                onDeleteEmployee = { employee ->
-                    viewModel.deleteEmployee(employee)
-                },
-
-                onBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        // Deleting a department(s)
-        composable(AppRoutes.DELETE_DEPARTMENT) {
-
-            DeleteDepartmentScreen(
-                departments = departments,
-                employees = employees,
-
-                onDeleteDepartment = { department ->
-                    viewModel.deleteDepartment(department)
-                },
-
-                onBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
         // Department directory
         composable(AppRoutes.DEPARTMENT_DIRECTORY) {
 
-            DepartmentDirectoryScreen(
-                departments = departments,
-                employees = employees,
-                onBack = {
-                    navController.popBackStack()
-                }
-            )
+            AuthGuard(
+                sessionManager = sessionManager,
+                onUnauthorized = onUnauthorized
+            ){
+                DepartmentDirectoryScreen(
+                    departments = departments,
+                    employees = employees,
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
         }
     }
 }
