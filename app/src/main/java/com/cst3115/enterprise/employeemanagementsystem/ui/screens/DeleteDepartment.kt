@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 
 import com.cst3115.enterprise.employeemanagementsystem.data.local.Department
 import com.cst3115.enterprise.employeemanagementsystem.data.local.Employee
+import com.cst3115.enterprise.employeemanagementsystem.ui.components.WorkforceScreenHeader
 
 @Composable
 fun DeleteDepartmentScreen(
@@ -30,23 +31,12 @@ fun DeleteDepartmentScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        TextButton(
-            onClick = onBack
-        ) {
-            Text("← Back")
-        }
-
-        Text(
-            text = "Delete Department",
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
+        WorkforceScreenHeader(
+            title = "Delete Department",
+            subtitle = "Select a department  to remove from your organization.",
+            onBack = onBack
         )
 
-        Text(
-            text = "Select a department to remove from your organization.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
 
         if (departments.isEmpty()) {
 

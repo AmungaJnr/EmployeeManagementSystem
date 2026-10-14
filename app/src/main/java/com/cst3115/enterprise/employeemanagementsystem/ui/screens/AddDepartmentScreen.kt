@@ -8,6 +8,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.cst3115.enterprise.employeemanagementsystem.ui.components.WorkforceScreenHeader
 
 @Composable
 fun AddDepartmentScreen(
@@ -30,16 +31,10 @@ fun AddDepartmentScreen(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
-        Text(
-            text = "Add Department",
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
-        Text(
-            text = "Create a new department for your organization.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        WorkforceScreenHeader(
+            title = "Add Department",
+            subtitle = "Create a new department for your organization.",
+            onBack = onBack
         )
 
         OutlinedTextField(

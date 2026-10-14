@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 
 import com.cst3115.enterprise.employeemanagementsystem.data.local.Department
 import com.cst3115.enterprise.employeemanagementsystem.util.generateEmployeeEmail
+import com.cst3115.enterprise.employeemanagementsystem.ui.components.WorkforceScreenHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,16 +53,10 @@ fun AddEmployeeScreen(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
-        Text(
-            text = "Add Employee",
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
-        Text(
-            text = "Register a new team member.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        WorkforceScreenHeader(
+            title = "Add Employee",
+            subtitle = "Register a new team member.",
+            onBack = onBack
         )
 
         OutlinedTextField(

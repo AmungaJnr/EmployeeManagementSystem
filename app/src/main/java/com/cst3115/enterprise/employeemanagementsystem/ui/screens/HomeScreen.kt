@@ -3,6 +3,7 @@ package com.cst3115.enterprise.employeemanagementsystem.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,13 @@ import com.cst3115.enterprise.employeemanagementsystem.ui.components.EmployeeCar
 import com.cst3115.enterprise.employeemanagementsystem.ui.components.StatCard
 import com.cst3115.enterprise.employeemanagementsystem.viewmodel.EmployeeViewModel
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomeScreen(
@@ -38,106 +46,226 @@ fun HomeScreen(
 
     val departments by viewModel.departments.collectAsStateWithLifecycle()
 
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(24.dp)
-    ){
+            .safeDrawingPadding(),
+        contentPadding = PaddingValues(
+            start = 20.dp,
+            end = 20.dp,
+            top = 24.dp,
+            bottom = 32.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
 
-        Text(
-            text = "WORKFORCE",
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        // 1. BRAND HEADER
+        item {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
 
-        Spacer(modifier = Modifier.height(8.dp))
+                Row {
+                    Text(
+                        text = "WORKFORCE",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
 
-        Text(
-            text = "People & Operations",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+                    Text(
+                        text = "™",
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = "Your workforce at a glance",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ){
-            StatCard(
-                title = "EMPLOYEES",
-                value = employees.size.toString(),
-                description = "Total workforce",
-                modifier = Modifier.weight(1f)
-            )
-
-            StatCard(
-                title = "DEPARTMENTS",
-                value = departments.size.toString(),
-                description = "Business units",
-                modifier = Modifier.weight(1f)
-            )
+                Text(
+                    text = "THE THREE",
+                    style = MaterialTheme.typography.labelMedium,
+                    letterSpacing = 4.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        // 2. DASHBOARD OVERVIEW
+        item {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
 
-        Button(
-            onClick = onAddDepartment,
-            modifier = Modifier.fillMaxWidth()
-        ){
-            Text("Add Department")
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+
+                Text(
+                    text = "Workforce Overview",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Text(
+                    text = "Your organization at a glance",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    StatCard(
+                        title = "Employees",
+                        value = employees.size.toString(),
+                        description = "Total workforce",
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    StatCard(
+                        title = "Departments",
+                        value = departments.size.toString(),
+                        description = "Departments",
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
 
-        Spacer(modifier = Modifier.height(9.dp))
+        // 3. QUICK ACTIONS
+        item {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
 
-        Button(
-            onClick = onAddEmployee,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Add Employee")
+                Text(
+                    text = "QUICK ACTIONS",
+                    style = MaterialTheme.typography.labelLarge,
+                    letterSpacing = 2.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    Button(
+                        onClick = onAddEmployee,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(
+                            horizontal = 8.dp,
+                            vertical = 14.dp
+                        )
+                    ) {
+                        Text("+ Employee")
+                    }
+
+                    Button(
+                        onClick = onAddDepartment,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(
+                            horizontal = 8.dp,
+                            vertical = 14.dp
+                        )
+                    ) {
+                        Text("+ Department")
+                    }
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    OutlinedButton(
+                        onClick = onDeleteEmployee,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(
+                            horizontal = 8.dp,
+                            vertical = 14.dp
+                        )
+                    ) {
+                        Text("− Employee")
+                    }
+
+                    OutlinedButton(
+                        onClick = onDeleteDepartment,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(
+                            horizontal = 8.dp,
+                            vertical = 14.dp
+                        )
+                    ) {
+                        Text("− Department")
+                    }
+                }
+            }
         }
 
-        Spacer(modifier = Modifier.height(9.dp))
+        // 4. EMPLOYEE DIRECTORY HEADING
+        item {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
 
-        OutlinedButton(
-            onClick = onDeleteEmployee,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Delete Employee")
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Employee Directory",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Text(
+                    text = "Browse your organization",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.height(9.dp))
+        // 5. EMPLOYEE RECORDS
+        if (employees.isEmpty()) {
 
-        OutlinedButton(
-            onClick = onDeleteDepartment,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Delete Department")
-        }
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                ) {
 
-        Spacer(modifier = Modifier.height(32.dp))
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
 
-        Text(
-            text = "Employee Directory",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+                        Text(
+                            text = "No employees yet",
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Add your first employee to start building your directory.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        } else {
+
             items(
                 items = employees,
                 key = { employee -> employee.id }
