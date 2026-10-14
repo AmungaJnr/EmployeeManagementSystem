@@ -18,6 +18,7 @@ import com.cst3115.enterprise.employeemanagementsystem.ui.screens.AddEmployeeScr
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.EmployeeDetailsScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DeleteEmployeeScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DeleteDepartmentScreen
+import com.cst3115.enterprise.employeemanagementsystem.ui.screens.SplashScreen
 
 @Composable
 fun AppNavigation(
@@ -33,9 +34,27 @@ fun AppNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = AppRoutes.HOME,
+        startDestination = AppRoutes.SPLASH,
         modifier = modifier
     ) {
+
+        // Splash Screen
+        composable(AppRoutes.SPLASH) {
+
+            SplashScreen(
+                onSplashFinished = {
+
+                    navController.navigate(AppRoutes.HOME) {
+
+                        popUpTo(AppRoutes.SPLASH) {
+                            inclusive = true
+                        }
+
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
 
         // Home Screen
         composable(AppRoutes.HOME) {
