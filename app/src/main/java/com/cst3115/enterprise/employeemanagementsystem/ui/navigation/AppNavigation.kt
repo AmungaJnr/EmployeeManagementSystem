@@ -19,6 +19,7 @@ import com.cst3115.enterprise.employeemanagementsystem.ui.screens.EmployeeDetail
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DeleteEmployeeScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DeleteDepartmentScreen
 import com.cst3115.enterprise.employeemanagementsystem.ui.screens.SplashScreen
+import com.cst3115.enterprise.employeemanagementsystem.ui.screens.DepartmentDirectoryScreen
 
 @Composable
 fun AppNavigation(
@@ -82,6 +83,10 @@ fun AppNavigation(
 
                 onDeleteDepartment = {
                     navController.navigate(AppRoutes.DELETE_DEPARTMENT)
+                },
+
+                onViewDepartments = {
+                    navController.navigate(AppRoutes.DEPARTMENT_DIRECTORY)
                 }
             )
         }
@@ -188,6 +193,18 @@ fun AppNavigation(
                     viewModel.deleteDepartment(department)
                 },
 
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Department directory
+        composable(AppRoutes.DEPARTMENT_DIRECTORY) {
+
+            DepartmentDirectoryScreen(
+                departments = departments,
+                employees = employees,
                 onBack = {
                     navController.popBackStack()
                 }

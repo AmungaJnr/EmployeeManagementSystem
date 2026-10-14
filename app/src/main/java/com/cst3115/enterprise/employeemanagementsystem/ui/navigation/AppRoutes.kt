@@ -17,4 +17,6 @@ object AppRoutes {
     const val DELETE_DEPARTMENT = "delete_department"
 
     const val EMPLOYEE_DETAILS = "employee_details/{employeeId}"
+
+    const val DEPARTMENT_DIRECTORY = "department_directory"
 }
