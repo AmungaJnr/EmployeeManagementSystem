@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 import com.cst3115.enterprise.employeemanagementsystem.data.local.Employee
+import com.cst3115.enterprise.employeemanagementsystem.ui.components.WorkforceScreenHeader
 
 @Composable
 fun DeleteEmployeeScreen(
@@ -28,20 +29,10 @@ fun DeleteEmployeeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        TextButton(onClick = onBack) {
-            Text("← Back")
-        }
-
-        Text(
-            text = "Delete Employee",
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
-        Text(
-            text = "Select an employee to remove from your organization.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        WorkforceScreenHeader(
+            title = "Delete Employee",
+            subtitle = "Select an employee to remove from your organization.",
+            onBack = onBack
         )
 
         if (employees.isEmpty()) {

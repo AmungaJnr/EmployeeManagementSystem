@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.cst3115.enterprise.employeemanagementsystem.data.local.EmployeeDetails
 import com.cst3115.enterprise.employeemanagementsystem.ui.components.EmployeeAvatar
 import com.cst3115.enterprise.employeemanagementsystem.ui.components.getInitials
+import com.cst3115.enterprise.employeemanagementsystem.ui.components.WorkforceScreenHeader
 
 @Composable
 fun EmployeeDetailsScreen(
@@ -24,16 +25,10 @@ fun EmployeeDetailsScreen(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
-        TextButton(
-            onClick = onBack
-        ) {
-            Text("← Back")
-        }
-
-        Text(
-            text = "Employee Details",
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
+        WorkforceScreenHeader(
+            title = "Employee Details",
+            subtitle = "",
+            onBack = onBack
         )
 
         if (employee == null) {
