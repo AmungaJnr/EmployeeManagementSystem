@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.cst3115.enterprise.employeemanagementsystem.ui.components.WorkforceScreenHeader
+import com.cst3115.enterprise.employeemanagementsystem.ui.components.WorkforceFormSection
 
 @Composable
 fun AddDepartmentScreen(
@@ -37,30 +38,35 @@ fun AddDepartmentScreen(
             onBack = onBack
         )
 
-        OutlinedTextField(
-            value = departmentName,
-            onValueChange = {
-                departmentName = it
-                isError = false
-            },
-            label = {
-                Text("Department Name")
-            },
-            placeholder = {
-                Text("e.g. Engineering")
-            },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            isError = isError,
-            supportingText = {
-                if (isError) {
-                    Text("Department name cannot be empty")
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done
+        WorkforceFormSection(
+            title = "Department Information"
+        ) {
+            OutlinedTextField(
+                value = departmentName,
+                onValueChange = {
+                    departmentName = it
+                    isError = false
+                },
+                label = {
+                    Text("Department Name")
+                },
+                placeholder = {
+                    Text("e.g. Engineering")
+                },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                isError = isError,
+                supportingText = {
+                    if (isError) {
+                        Text("Department name cannot be empty")
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done
+                )
             )
-        )
+        }
+
 
         Button(
             onClick = {
