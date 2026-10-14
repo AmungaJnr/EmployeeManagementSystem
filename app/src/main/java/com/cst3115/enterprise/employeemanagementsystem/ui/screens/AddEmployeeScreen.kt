@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 import com.cst3115.enterprise.employeemanagementsystem.data.local.Department
+import com.cst3115.enterprise.employeemanagementsystem.ui.components.WorkforceFormSection
 import com.cst3115.enterprise.employeemanagementsystem.util.generateEmployeeEmail
 import com.cst3115.enterprise.employeemanagementsystem.ui.components.WorkforceScreenHeader
 
@@ -59,108 +60,124 @@ fun AddEmployeeScreen(
             onBack = onBack
         )
 
-        OutlinedTextField(
-            value = employeeName,
-            onValueChange = {
-                employeeName = it
-                showError = false
-            },
-            label = { Text("Full Name") },
-            placeholder = { Text("e.g. John Doe") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            isError = showError && employeeName.isBlank()
-        )
-
-        OutlinedTextField(
-            value = if (employeeName.isBlank()) {
-                ""
-            } else {
-                employeeEmail
-            },
-            onValueChange = {},
-            label = {
-                Text("Company Email")
-            },
-            placeholder = {
-                Text("Automatically generated")
-            },
-            supportingText = {
-                Text("Generated from the employee's name")
-            },
-            modifier = Modifier.fillMaxWidth(),
-            readOnly = true,
-            singleLine = true
-        )
-
-        ExposedDropdownMenuBox(
-            expanded = departmentExpanded,
-            onExpandedChange = {
-                departmentExpanded = it
-            }
+        WorkforceFormSection(
+            title = "Employee Information"
         ) {
-
             OutlinedTextField(
-                value = selectedDepartment?.let {
-                    "${it.name} · ID ${it.id}"
-                } ?: "",
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Department") },
-                placeholder = { Text("Select a department") },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = departmentExpanded
-                    )
+                value = employeeName,
+                onValueChange = {
+                    employeeName = it
+                    showError = false
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(
-                        ExposedDropdownMenuAnchorType.PrimaryNotEditable
-                    ),
-                isError = showError && selectedDepartment == null
+                label = { Text("Full Name") },
+                placeholder = { Text("e.g. John Doe") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                isError = showError && employeeName.isBlank()
             )
 
-            ExposedDropdownMenu(
+            OutlinedTextField(
+                value = if (employeeName.isBlank()) {
+                    ""
+                } else {
+                    employeeEmail
+                },
+                onValueChange = {},
+                label = {
+                    Text("Company Email")
+                },
+                placeholder = {
+                    Text("Automatically generated")
+                },
+                supportingText = {
+                    Text("Generated from the employee's name")
+                },
+
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f),
+                    unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f)
+                ),
+
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true,
+                singleLine = true
+            )
+
+        }
+
+        WorkforceFormSection(
+            title = "Department Assignment"
+        ) {
+            ExposedDropdownMenuBox(
                 expanded = departmentExpanded,
-                onDismissRequest = {
-                    departmentExpanded = false
+                onExpandedChange = {
+                    departmentExpanded = it
                 }
             ) {
 
-                departments.forEach { department ->
+                OutlinedTextField(
+                    value = selectedDepartment?.let {
+                        "${it.name} · ID ${it.id}"
+                    } ?: "",
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Department") },
+                    placeholder = { Text("Select a department") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = departmentExpanded
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(
+                            ExposedDropdownMenuAnchorType.PrimaryNotEditable
+                        ),
+                    isError = showError && selectedDepartment == null
+                )
 
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                "${department.name} · ID ${department.id}"
-                            )
-                        },
-                        onClick = {
-                            selectedDeptID = department.id
-                            departmentExpanded = false
-                            showError = false
-                        }
-                    )
+                ExposedDropdownMenu(
+                    expanded = departmentExpanded,
+                    onDismissRequest = {
+                        departmentExpanded = false
+                    }
+                ) {
+
+                    departments.forEach { department ->
+
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    "${department.name} · ID ${department.id}"
+                                )
+                            },
+                            onClick = {
+                                selectedDeptID = department.id
+                                departmentExpanded = false
+                                showError = false
+                            }
+                        )
+                    }
                 }
+            }
+
+            if (departments.isEmpty()) {
+                Text(
+                    text = "No departments available. Add a department first.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+            if (showError) {
+                Text(
+                    text = "Enter an employee name, and select a department.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
 
-        if (departments.isEmpty()) {
-            Text(
-                text = "No departments available. Add a department first.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error
-            )
-        }
-
-        if (showError) {
-            Text(
-                text = "Enter an employee name, and select a department.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error
-            )
-        }
 
         Button(
             onClick = {
